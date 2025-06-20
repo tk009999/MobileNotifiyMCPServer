@@ -17,15 +17,25 @@ DC 機器人推播通知器 MCP (Discord Bot Push Notification MCP Server)
 
 ### 2.1 架構圖
 ```
-[Cursor/Claude] ←→ [MCP Server] ←→ [Discord Bot] ←→ [使用者手機]
+[Cursor/Claude] ←→ [MCP Server (本地)] ←→ [Discord Bot (雲端)] ←→ [使用者手機]
 ```
 
 ### 2.2 核心組件
-1. **MCP Server**: 實現 MCP 協議的服務器
-2. **Discord Bot**: 處理 Discord 訊息的機器人
+1. **MCP Server (本地部署)**: 實現 MCP 協議的服務器，運行在使用者本地電腦
+2. **Discord Bot (雲端部署)**: 處理 Discord 訊息的機器人，24/7 運行在雲端服務
 3. **通知管理器**: 管理通知佇列和狀態
 4. **訊息路由器**: 處理雙向訊息路由
 5. **工作狀態追蹤器**: 追蹤工作進度和里程碑
+
+### 2.3 部署架構說明
+- **本地 MCP Server**: 
+  - 直接與 Cursor/Claude 通信
+  - 處理工作狀態和通知邏輯
+  - 透過 HTTP/WebSocket 與雲端 Discord Bot 通信
+- **雲端 Discord Bot**: 
+  - 24/7 運行，確保通知及時送達
+  - 接收使用者回覆並轉發到本地 MCP Server
+  - 部署在 Heroku、Railway、AWS 等雲端平台
 
 ## 3. 功能需求
 
@@ -210,9 +220,29 @@ GET /api/v1/work-history/{project_id}
 ## 9. 部署和維運
 
 ### 9.1 部署方式
-- Docker 容器化部署
-- 支援本地和雲端部署
-- 自動化部署腳本
+
+#### 9.1.1 MCP Server (本地部署)
+- **部署環境**: 使用者本地電腦 (macOS/Windows/Linux)
+- **容器化**: Docker 容器 (可選)
+- **啟動方式**: 
+  - 開發模式: `python main.py`
+  - 生產模式: Docker Compose
+- **配置管理**: 環境變數檔案 `.env`
+
+#### 9.1.2 Discord Bot (雲端部署)
+- **推薦平台**: 
+  - Railway (免費額度充足)
+  - Heroku (經典選擇)
+  - Google Cloud Run (按需計費)
+  - AWS Lambda (Serverless)
+- **容器化**: Docker 容器
+- **自動部署**: GitHub Actions CI/CD
+- **環境變數**: 雲端平台的環境變數管理
+
+#### 9.1.3 通信安全
+- **HTTPS/WSS**: 加密通信連接
+- **API 金鑰**: 本地與雲端間的認證
+- **IP 白名單**: 限制存取來源 (可選)
 
 ### 9.2 監控和日誌
 - 系統效能監控
