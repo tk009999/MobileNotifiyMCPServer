@@ -183,10 +183,13 @@ GET /api/v1/work-history/{project_id}
 
 ### 7.1 第一階段 (MVP)
 - [x] 專案規格制定
-- [ ] MCP Server 基礎架構
-- [ ] Discord Bot 基本功能
-- [ ] 簡單通知機制
-- [ ] 基礎 API 實作
+- [x] MCP Server 基礎架構
+- [x] Discord Bot 基本功能
+- [x] 簡單通知機制
+- [x] 基礎 API 實作
+- [x] 資料庫設計和操作
+- [x] Docker 容器化配置
+- [x] 開發環境腳本
 
 ### 7.2 第二階段
 - [ ] 雙向互動功能
